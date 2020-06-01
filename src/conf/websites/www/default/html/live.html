@@ -1,0 +1,81 @@
+<html lang="en">
+
+<head>
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+    <title>Your live stream</title>
+</head>
+
+<body>
+    <h1>Channel 1</h1>
+    <p>How to stream to here
+    </p>
+    <video class="video-js" width=426 height=240 controls preload="auto" data-setup='{}'>
+        <source src="/hls/live/ch01.m3u8" type="application/x-mpegURL" />
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+    </video>
+    <h1>Channel 2</h1>
+    <video class="video-js" width=426 height=240 controls preload="auto" data-setup='{}'>
+        <source src="/hls/live/ch02.m3u8" type="application/x-mpegURL" />
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+    </video>
+    <h1>Live stream push to facebook</h1>
+    <video class="video-js" width=426 height=240 controls preload="auto" data-setup='{}'>
+        <source src="/hls/live2/ch01.m3u8" type="application/x-mpegURL" />
+        <p class="vjs-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a
+            web browser that
+            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+        </p>
+    </video>
+    <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // Get all the videos!
+            var videos = document.getElementsByTagName('video');
+
+            // Loop through the videos
+            for (i = 0; i < videos.length; i++) {
+
+                // Stash the video
+                //var video = videos[i];
+
+                // Check for VideoJs
+                if (videos[i].className.indexOf('video-js') > -1) {
+
+                    videos[i].id = "ch" + i
+                    // When player is ready...
+                    videojs(videos[i].id).ready(function () {
+
+                        // Stash the player object
+                        var player = this;
+                        var errorDisplay = player.getChild('errorDisplay');
+                        errorDisplay.off(player, 'error', errorDisplay.open);
+                        errorDisplay.on(player, 'error', function (e) {
+                            var error = player.error();
+                            if (error && error.code !== 4) {
+                                errorDisplay.open();
+                            } else {
+                                player.poster("/img/test-pattern.svg")
+                            }
+                        });
+                    });
+                }
+            }
+        })();
+    </script>
+</body>
+
+</html>
