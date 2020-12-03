@@ -1,0 +1,48 @@
+###################################################################################
+# The privilige user that is in sudoers
+# This is a requirement, if root login is disabled (default)
+###################################################################################
+user: {
+  [
+    name: "myuser",
+    password: "secret",
+    shell: /bin/bash,
+    memberOfGruops: [
+      "sudo",
+    ],
+#    homeDirectory: /home/myuser,
+#    sshkey:
+  ],
+}
+
+###################################################################################
+# Local server settings
+###################################################################################
+localHost: [
+  ServerName: "myhost",
+  TimeZone: "",
+#  PublicIp4Address: # script will guess it if not apply
+#  PublicIp6Address: # script will guess it if not apply
+]
+
+###################################################################################
+# SSHD settings
+###################################################################################
+ssh: [
+  permitRootLogin: "no", # option yes|no
+  passwordAuth: "yes", # option yes|no # please apply user with sshkey and set this to no
+]
+
+webserver: [
+  nginx: "compile", # option yes|no|compile
+#  nginxCompileVersion: "1.19.5",
+]
+
+stunnel: "yes" # option yes|no (RTMPS workaround for live broadcast to facebook)
+
+letsencrypts: [
+  install: true,
+  email: "",
+]
+
+bashStuff: true # true|false

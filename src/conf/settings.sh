@@ -29,6 +29,7 @@ SSHD_PASSWORDAUTH="yes" # option yes|no
 # Only choose one of NGINX_INSTALL or NGINX_COMPILE to be "on"
 #NGINX_INSTALL="off" # option on|off
 NGINX_COMPILE="on" # option on|off
+    # NGINX_VER=1.19.2
 
 STUNNEL_INSTALL="on" # option on|off # RTMPS workaround
 
