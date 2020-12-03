@@ -2,18 +2,27 @@
 # The privilige user that is in sudoers
 # This is a requirement, if root login is disabled (default)
 ###################################################################################
-user: {
-  [
+gruops: [
+  "staff"
+]
+user: [
+  {
     name: "myuser",
     password: "secret",
     shell: /bin/bash,
     memberOfGruops: [
-      "sudo",
-    ],
-#    homeDirectory: /home/myuser,
-#    sshkey:
-  ],
-}
+        "sudo",
+        "staff"
+    ]
+    # homeDirectory: /home/myuser,
+    # sshkey:
+  },
+  # {
+  #   name: "myuser2",
+  #   password: "secret",
+  #   shell: /bin/bash,
+  # },
+]
 
 ###################################################################################
 # Local server settings
@@ -41,8 +50,8 @@ webserver: [
 stunnel: "yes" # option yes|no (RTMPS workaround for live broadcast to facebook)
 
 letsencrypts: [
-  install: true,
+  install: true, # option true|false
   email: "",
 ]
 
-bashStuff: true # true|false
+bashStuff: true # option true|false
