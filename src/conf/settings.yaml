@@ -2,56 +2,126 @@
 # The privilige user that is in sudoers
 # This is a requirement, if root login is disabled (default)
 ###################################################################################
-gruops: [
-  "staff"
-]
-user: [
-  {
-    name: "myuser",
-    password: "secret",
-    shell: /bin/bash,
-    memberOfGruops: [
-        "sudo",
-        "staff"
-    ]
+groups:
+  - staff
+  - website1
+  - website2
+
+superuser: &superuser
+  name: myuser
+  password: secret
+  email: myuser@gmail.com
+
+user:
+  -
+    << : *superuser
+    shell: /bin/bash
+    memberOfGroups:
+        - 'sudo'
+        - 'staff'
+        - 'website1'
+        - 'website2'
     # homeDirectory: /home/myuser,
     # sshkey:
-  },
-  # {
-  #   name: "myuser2",
-  #   password: "secret",
-  #   shell: /bin/bash,
-  # },
-]
+  - name: 'mywebsiteeditor1'
+    password: 'secret'
+    shell: /bin/bash
+    memberOfGroups:
+        - 'website1'
+  - name: 'mywebsiteeditor2'
+    password: 'secret'
+    shell: /bin/bash
+    memberOfGroups:
+        - 'website2'
 
 ###################################################################################
 # Local server settings
 ###################################################################################
-localHost: [
-  ServerName: "myhost",
-  TimeZone: "",
-#  PublicIp4Address: # script will guess it if not apply
-#  PublicIp6Address: # script will guess it if not apply
-]
+localHost:
+  serverName: 'website1.com' #FQDN
+  timeZone: ''
+#  publicIp4Address: # script will guess it if not apply
+#  publicIp6Address: # script will guess it if not apply
+
 
 ###################################################################################
 # SSHD settings
 ###################################################################################
-ssh: [
-  permitRootLogin: "no", # option yes|no
-  passwordAuth: "yes", # option yes|no # please apply user with sshkey and set this to no
-]
+ssh:
+  permitRootLogin: 'no' # option yes|no
+  passwordAuth: 'yes' # option yes|no # please apply user with sshkey and set this to no
 
-webserver: [
-  nginx: "compile", # option yes|no|compile
-#  nginxCompileVersion: "1.19.5",
-]
+###################################################################################
+# Webserver
+###################################################################################
+# nginx: 'compile', # option yes|no|compile
+#
+webserver:
+  nginx: 'compile'
+#  nginxCompileVersion: '1.19.5'
 
-stunnel: "yes" # option yes|no (RTMPS workaround for live broadcast to facebook)
+stunnel: 'yes' # option yes|no (RTMPS workaround for live broadcast to facebook)
 
-letsencrypts: [
-  install: true, # option true|false
-  email: "",
-]
+apps:
+  postgresql:
+    install: 'install' # install or compile
+    superuser: 'admin'
+    password: 'password'
 
+rtmp:
+  configFile: 'nginx/rtmp.conf'
+  # hlsPath: '/mnt/hls'
+
+webHosts:
+  - name: 'website1'
+    user: 'www-data'
+    group: 'website1'
+    virtualhosts:
+      - virtualhost: 'www.website1.com'
+        virtualenv: 'python3'
+        framework:
+          name: 'django'
+          app_name: 'mainsite'
+          skeleton: 'yes'
+          uwsgi_autocreate_config: 'yes'
+      - virtualhost: 'test.website1.com'
+        group: 'staff'
+        virtualenv: 'python3'
+        framework:
+          name: 'django'
+          djangosu:
+            << : *superuser
+          djangoSuPassword: password
+          app_name: 'mainsite'
+          skeleton: 'yes'
+          uwsgi_autocreate_config: 'yes'
+  - name: 'website2'
+    user: 'www-data'
+    group: 'website2'
+    virtualhosts:
+      - virtualhost: 'www.website2.com'
+        virtualenv: 'python3'
+        framework:
+          name: 'django'
+          app_name: 'mainsite'
+          skeleton: 'yes'
+          uwsgi_autocreate_config: 'yes'
+
+###################################################################################
+# Let's Encrypt
+###################################################################################
+# # option true|false
+letsencrypt:
+  email: 'myuser@gmail.com'
+
+###################################################################################
+# bashStuff
+# coloring the terminal like old commodore style (always easy to see if you are working localy or on the server)
+###################################################################################
 bashStuff: true # option true|false
+
+###################################################################################
+# Mail server
+###################################################################################
+mailServer:
+  hostname: 'website1.com'
